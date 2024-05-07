@@ -36,3 +36,21 @@
     transform: rotate(360deg);
   }
 }
+
+.custom-navbar {
+  background-color: #333; /* Background color for the navbar */
+}
+
+.navbar-brand {
+  color: #fff; /* Text color for the brand/logo */
+}
+
+.nav-link {
+  color: #fff; /* Text color for the nav links */
+}
+
+.dropdown-item {
+  color: #fff; /* Text color for the dropdown items */
+}
+
+/* Add more custom styles as needed */
