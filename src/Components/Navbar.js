@@ -1,34 +1,53 @@
 import React from 'react';
-import Container from 'react-bootstrap/Container';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
-import NavDropdown from 'react-bootstrap/NavDropdown';
+import { Navbar, Nav, Container, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import '../App.css'
+import { useNavigate } from 'react-router-dom';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-export default function NavBar() {
+export default function CustomNavbar() {
+  const navigate = useNavigate()
+  const handleLogout =()=>{
+    localStorage.removeItem("authToken");
+    navigate('/')
+  }
   return (
     <Navbar bg="dark" variant="dark" expand="lg" className="custom-navbar">
-    <Container>
-      <Navbar.Brand as={Link} to="#home">GoFood</Navbar.Brand>
-      <Navbar.Toggle aria-controls="basic-navbar-nav" />
-      <Navbar.Collapse id="basic-navbar-nav">
-        <Nav className="me-auto">
-          <Nav.Link as={Link} to="#home">Home</Nav.Link>
-          <Nav.Link as={Link} to="/Login">Login</Nav.Link>
-          <Nav.Link as={Link} to="/SignUp">Signup</Nav.Link>
-          <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-            <NavDropdown.Item as={Link} to="#action/3.1">Action</NavDropdown.Item>
-            <NavDropdown.Item as={Link} to="#action/3.2">Another action</NavDropdown.Item>
-            <NavDropdown.Item as={Link} to="#action/3.3">Something</NavDropdown.Item>
-            <NavDropdown.Divider />
-            <NavDropdown.Item as={Link} to="#action/3.4">Separated link</NavDropdown.Item>
-          </NavDropdown>
-        </Nav>
-      </Navbar.Collapse>
-    </Container>
-  </Navbar>
+      <Container>
+        <Navbar.Brand as={Link} to="#home">GoFood</Navbar.Brand>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="me-auto">
+            <Nav.Link as={Link} to="#home">Home</Nav.Link>
+            {localStorage.getItem('authToken') && <Nav.Link as={Link} to="#orders">My Orders</Nav.Link>}
+          </Nav>
+          <Nav className="ms-auto d-flex align-items-center">
+            {localStorage.getItem('authToken') ? (
+              <div style={{ display: 'inline' }}>
+                <Button
+                  as={Link}
+                  variant="outline-light"
+                  className="me-2"
+                  onClick={handleLogout}
+                >
+                  LogOut
+                </Button>
+                <Button
+                  as={Link}
+                  to="/cart"
+                  variant="outline-light"
+                >
+                  My Cart
+                </Button>
+              </div>
+            ) : (
+              <>
+                <Button as={Link} to="/Login" variant="outline-light" className="me-2">Login</Button>
+                <Button as={Link} to="/SignUp" variant="outline-light">Signup</Button>
+              </>
+            )}
+          </Nav>
+        </Navbar.Collapse>
+      </Container>
+    </Navbar>
   );
 }
-
-

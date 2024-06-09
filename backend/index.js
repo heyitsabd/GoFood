@@ -3,6 +3,7 @@ const app = express();
 const PORT = 5000;
 const mongoose = require('mongoose');
 const creatuser = require('./Routes/createUser')
+const DisplayData = require('./Routes/DisplayData')
 const cors = require('cors'); 
 
 app.use(cors({
@@ -19,19 +20,33 @@ mongoose.connect('mongodb://127.0.0.1:27017/goFoodMERN', { useNewUrlParser: true
         console.log('MongoDB connected successfully');
 
         const fetch_data = mongoose.connection.db.collection('foodItems');
+        const food_collection = mongoose.connection.db.collection('food_category')
         fetch_data.find({}).toArray()
-            // .then(data => {
-            //     console.log('Fetched food items:', data); 
-            // })
-            // .catch(err => {
-            //     console.error('Error fetching food items:', err);
-            // });
+       
+            .then(data => {
+                global.food_items= data;
+                // console.log('Fetched food items:', global.food_items); 
+            })
+            .catch(err => {
+                console.error('Error fetching food items:', err);
+            });
+
+            food_collection.find({}).toArray()
+                .then(categoryData=>{
+                    
+                    global.food_category=categoryData;
+                }).catch(err => {
+                    console.error('Error fetching food items:', err);
+                });
     })
     .catch(err => {
         console.error('Failed to connect to MongoDB:', err);
     });
 
+
+app.use('/api',DisplayData)
 app.use('/api',creatuser)
+
 
 app.get('/',async(req,res)=>{
     console.log('Hello world')
