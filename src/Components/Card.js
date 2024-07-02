@@ -2,8 +2,10 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useCart, useDispatchCart } from './contextReducer';
 
 export default function Card(props) {
+  
   const option = props.options;
   const priceOption = Object.keys(option)
+  let foodItem = props.item;
   const priceRef= useRef()
   let dispatch= useDispatchCart();
   let data= useCart();
@@ -16,11 +18,36 @@ export default function Card(props) {
   },[])
 
 
-  const handleAddtoCart=async()=>{    
-    await dispatch({type:"ADD",id:props.foodItems._id,name: props.foodItems.name,price: finalPrice,qty:qty,size:size})
-    console.log(data)
+  const handleAddToCart = async () => {
+    let food = []
+    for (const item of data) {
+      if (item.id === foodItem._id) {
+        food = item;
+
+        break;
+      }
+    }
+ 
+    if (food.length > 0) {
+      if (food.size === size) {
+        await dispatch({ type: "UPDATE", id: foodItem._id, price: finalPrice, qty: qty })
+        return
+      }
+      else if (food.size !== size) {
+        await dispatch({ type: "ADD", id: foodItem._id, name: foodItem.name, price: finalPrice, qty: qty, size: size,img: props.ImgSrc })
+        console.log("Size different so simply ADD one more to the list")
+        return
+      }
+      return
+    }
+
+    await dispatch({ type: "ADD", id: foodItem._id, name: foodItem.name, price: finalPrice, qty: qty, size: size })
+
+
+    // setBtnEnable(true)
+
   }
-  
+
   return (
    
     <div
@@ -53,7 +80,7 @@ export default function Card(props) {
               </div>
             </div>
           
-             <button onClick={handleAddtoCart} className='btn btn-success justify-center ms-2'>Add to Cart</button>
+             <button onClick={handleAddToCart} className='btn btn-success justify-center ms-2'>Add to Cart</button>
           </div>
       
       </div>

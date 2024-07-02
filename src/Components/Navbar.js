@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Navbar, Nav, Container, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import {Badge} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Modal from '../Modal';
+import Cart from '../Screens/Cart';
 
 export default function CustomNavbar() {
   const navigate = useNavigate()
@@ -10,6 +13,8 @@ export default function CustomNavbar() {
     localStorage.removeItem("authToken");
     navigate('/')
   }
+
+  const [cartView,setCartview]= useState(false)
   return (
     <Navbar bg="dark" variant="dark" expand="lg" className="custom-navbar">
       <Container>
@@ -33,11 +38,16 @@ export default function CustomNavbar() {
                 </Button>
                 <Button
                   as={Link}
-                  to="/cart"
+              
                   variant="outline-light"
+                  onClick={()=>setCartview(true)}
                 >
                   My Cart
+                  <Badge pill bg='danger'>2</Badge>
                 </Button>
+                {
+                  cartView?<Modal onClose={()=>setCartview(false)} ><Cart/></Modal>:null
+                }
               </div>
             ) : (
               <>
